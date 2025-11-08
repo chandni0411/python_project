@@ -1,1 +1,47 @@
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+import os
+
+# Sender and receiver
+sender_email = "chandni.hirani10@gmail.com"
+password = "ivzb owvd qajx xyea"  
+receiver_email = "dhruvibhudiya07@gmail.com"
+
+# Email content
+subject = "Your Exam Result"
+body = "Hello Dhruvi,\n\nPlease find the file attached below.\n\nKindly let me know if you need any further information.\nThank you,\nChandni"
+
+# Attachment path
+attachment_path = "receipt1.pdf"  
+
+# Create message
+msg = MIMEMultipart()
+msg['From'] = sender_email
+msg['To'] = receiver_email
+msg['Subject'] = subject
+msg.attach(MIMEText(body, 'plain'))
+
+# Attach PDF
+if os.path.exists(attachment_path):
+    with open(attachment_path, "rb") as attachment:
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+    encoders.encode_base64(part)
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename={os.path.basename(attachment_path)}"
+    )
+    msg.attach(part)
+else:
+    print("❌ File not found:", attachment_path)
+
+# Send email
+with smtplib.SMTP("smtp.gmail.com", 587) as server:
+    server.starttls()
+    server.login(sender_email, password)
+    server.send_message(msg)
+    print(f"✅ Email sent to {receiver_email}")
