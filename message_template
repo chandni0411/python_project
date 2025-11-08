@@ -1,0 +1,7 @@
+<html>
+<body>
+  <p>Dear {{ first_name }},</p>
+  <p>You are invited to <b>{{ event }}</b>!</p>
+  <p>Best regards,<br>Your Team</p>
+</body>
+</html>
